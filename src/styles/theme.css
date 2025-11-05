@@ -18,7 +18,7 @@ body{ background:var(--sf-bg);
 
 .sf-brand{ font-weight:700; background:var(--sf-grad-acc); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
-.card{ background:var(--sf-surface); border-color:#1f2831; }
+.card{ background:var(--sf-surface); border-color:#1f283100; }
 
 .btn-primary{ background:var(--sf-primary); border-color:var(--sf-primary); }
 

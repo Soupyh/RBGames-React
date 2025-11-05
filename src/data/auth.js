@@ -67,7 +67,16 @@ export function register({ email, pass, name, role = 'USER' }) {
 
 // ================== CRUD DE USUARIOS (ADMIN) ==================
 export function listUsers() {
-  return readUsers();
+  // Asegúrate de que tu función se vea exactamente así:
+  // Lee 'users' desde localStorage CADA VEZ que es llamada.
+  // No uses variables "let cachedUsers = ..." fuera de la función.
+  try {
+    const data = localStorage.getItem('users');
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    console.error("Error al leer lista de usuarios:", e);
+    return [];
+  }
 }
 
 // Crea usuario sin iniciar sesión (para panel Admin)
@@ -127,4 +136,53 @@ export function setRole(email, role) {
 export function resetPassword(email, newPass) {
   if (!newPass) return { ok:false, error:'Nueva contraseña requerida' };
   return updateUser(email, { pass: newPass });
+}
+
+
+//============================================
+// Crud para menu de edicion de perfil propio 
+//============================================
+
+export function updateProfile(currentEmail, { name, email }) {
+  try {
+    // 1. Validar datos
+    if (!name || !email) {
+      return { ok: false, error: 'El nombre y el email son obligatorios.' };
+    }
+
+    // 2. Cargar la lista FRESCA (usando la función que acabamos de arreglar)
+    const users = listUsers(); 
+    const userIndex = users.findIndex(u => u.email === currentEmail);
+
+    if (userIndex === -1) {
+      return { ok: false, error: 'Error: El usuario actual no fue encontrado en la lista de usuarios.' };
+    }
+
+    // 3. Revisar si el nuevo email ya está en uso por OTRO usuario
+    const emailInUse = users.some(u => u.email === email && u.email !== currentEmail);
+    if (emailInUse) {
+      return { ok: false, error: 'El nuevo email ya está en uso por otra cuenta.' };
+    }
+
+    // 4. Actualizar al usuario EN LA LISTA (para el Admin Panel)
+    users[userIndex].name = name;
+    users[userIndex].email = email;
+
+    // 5. Guardar la lista actualizada (para el Admin Panel)
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // 6. Actualizar la SESIÓN ACTIVA (para "Mi cuenta")
+    const session = getSession(); 
+    if (session && session.email === currentEmail) {
+      session.name = name;
+      session.email = email;
+      localStorage.setItem('session', JSON.stringify(session));
+    }
+
+    return { ok: true };
+
+  } catch (err) {
+    console.error('Error en updateProfile:', err); 
+    return { ok: false, error: 'Ocurrió un error inesperado. Revisa la consola (F12).' };
+  }
 }
