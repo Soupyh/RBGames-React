@@ -28,6 +28,13 @@ export default function Carrito(){
           <div className="mt-3">
             <Link to="/checkout" className="btn btn-primary">Continuar a Checkout</Link>
           </div>
+          <div className="mt-3">
+            <Link to="/" className="btn btn-secondary">Seguir Comprando</Link>
+          </div>
+          <div className="mt-3">
+            <button className="btn btn-primary" onClick={() => {localStorage.removeItem('cart'); window.location.reload();}}>Vaciar Carrito</button>
+
+          </div>
         </>
       )}
     </>

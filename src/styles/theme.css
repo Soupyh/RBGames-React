@@ -28,3 +28,184 @@ body{ background:var(--sf-bg);
 .card .card-text {
   color: var(--card-text, var(--sf-muted));
 }
+
+
+/* Card base */
+.card {
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  will-change: transform;
+}
+
+/* Hover: levanta y brilla un poco */
+.card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  border-color: rgba(255,255,255,.15);
+}
+
+
+/* Navbar base con transiciones */
+.navbar-anim {
+  position: sticky;      /* se queda arriba y podemos animarla */
+  top: 0;
+  z-index: 1030;         /* sobre el contenido */
+  transition: transform .35s ease, background-color .25s ease, box-shadow .25s ease;
+  will-change: transform;
+  backdrop-filter: saturate(140%) blur(6px);
+  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 92%, transparent);
+}
+
+/* Sombra y fondo más sólido cuando hay scroll */
+.navbar-anim.nav--scrolled {
+  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 96%, transparent);
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+
+/* Ocultar al hacer scroll hacia abajo */
+.navbar-anim.nav--hidden {
+  transform: translateY(-100%);
+}
+
+/* Marca con degradé y brillo sutil */
+.sf-brand {
+  background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: filter .25s ease, transform .25s ease;
+}
+@media (hover:hover) {
+  .sf-brand:hover { filter: brightness(1.05); transform: translateY(-1px); }
+}
+
+/* Subrayado animado para los links */
+.navbar-anim .nav-link {
+  position: relative;
+  transition: color .2s ease, opacity .2s ease;
+}
+.navbar-anim .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -6px;
+  height: 2px; width: 0;
+  background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
+  transition: width .25s ease;
+}
+.navbar-anim .nav-link:hover::after,
+.navbar-anim .nav-link.active::after,
+.navbar-anim .nav-link[aria-current="page"]::after {
+  width: 100%;
+}
+
+/* Dropdown: animación “drop in” */
+@keyframes dropIn {
+  0% { opacity: 0; transform: translateY(8px) scale(.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.navbar-anim .dropdown-menu {
+  animation: dropIn .18s ease forwards;
+  transform-origin: top center;
+  will-change: transform, opacity;
+  border-color: var(--sf-border, #1f2831);
+  background: var(--sf-dropdown-bg, #11161c);
+  color: var(--sf-dropdown-text, #e8edf2);
+}
+
+/* Accesibilidad y móviles */
+@media (prefers-reduced-motion: reduce) {
+  .navbar-anim, .navbar-anim * {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+@media (hover:none) {
+  .navbar-anim .nav-link::after { display: none; } /* evita fantasmas en táctil */
+}
+
+
+/* === Navbar animations (RB Games) === */
+.navbar-anim {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  transition: transform .35s ease, background-color .25s ease, box-shadow .25s ease;
+  will-change: transform;
+  backdrop-filter: saturate(140%) blur(6px);
+  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 92%, transparent);
+}
+.navbar-anim.nav--scrolled {
+  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 96%, transparent);
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+}
+.navbar-anim.nav--hidden { transform: translateY(-100%); }
+
+.sf-brand {
+  background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: filter .25s ease, transform .25s ease;
+}
+@media (hover:hover) {
+  .sf-brand:hover { filter: brightness(1.05); transform: translateY(-1px); }
+}
+
+.navbar-anim .nav-link {
+  position: relative;
+  transition: color .2s ease, opacity .2s ease;
+}
+.navbar-anim .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -6px;
+  height: 2px; width: 0;
+  background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
+  transition: width .25s ease;
+}
+.navbar-anim .nav-link:hover::after,
+.navbar-anim .nav-link.active::after,
+.navbar-anim .nav-link[aria-current="page"]::after {
+  width: 100%;
+}
+
+@keyframes dropIn {
+  0% { opacity: 0; transform: translateY(8px) scale(.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.navbar-anim .dropdown-menu {
+  animation: dropIn .18s ease forwards;
+  transform-origin: top center;
+  will-change: transform, opacity;
+  border-color: var(--sf-border, #1f2831);
+  background: var(--sf-dropdown-bg, #11161c);
+  color: var(--sf-dropdown-text, #e8edf2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-anim, .navbar-anim * {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+@media (hover:none) {
+  .navbar-anim .nav-link::after { display: none; }
+}
+
+.product-card {
+  /* Preparamos la tarjeta para una transición suave */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Esto se activa al pasar el mouse por encima */
+.product-card:hover {
+  /* La hacemos un 3% más grande */
+  transform: scale(1.03);
+  
+  /* Le damos una sombra más pronunciada para que "flote" */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  
+  /* Nos aseguramos de que se ponga por encima de otras tarjetas */
+  z-index: 10;
+}
