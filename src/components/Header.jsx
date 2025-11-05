@@ -18,6 +18,8 @@ export default function Header(){
           <ul className="navbar-nav me-auto">
             <li className="nav-item"><NavLink to="/" className="nav-link">Tienda</NavLink></li>
             <li className="nav-item"><NavLink to="/categorias" className="nav-link">Categorías</NavLink></li>
+            <li className="nav-item"><NavLink to="/nosotros" className="nav-link">Nosotros</NavLink></li>
+            <li className="nav-item"><NavLink to="/soporte" className="nav-link">Soporte</NavLink></li>
           </ul>
           <div className="d-flex gap-2">
   <div className="d-flex gap-2">

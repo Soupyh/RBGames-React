@@ -12,6 +12,8 @@ import Cuenta from './pages/Cuenta'
 import RequireAdmin from './components/RequireAdmin'
 import RequireUser from './components/RequireUser'
 import Register from './pages/Register'
+import Nosotros from './pages/Nosotros'
+import Soporte from './pages/Soporte'
 
 export default function Router(){
   return (
@@ -27,6 +29,8 @@ export default function Router(){
       <Route path="/admin" element={<RequireAdmin><Admin/></RequireAdmin>} />
       <Route path="/cuenta" element={<RequireUser><Cuenta/></RequireUser>} />
       <Route path="/registro" element={<Register/>} />
+      <Route path="/nosotros" element={<Nosotros/>} />
+      <Route path="/soporte" element={<Soporte/>} />
     </Routes>
   )
 }
