@@ -1,10 +1,30 @@
 :root{
-  --sf-bg:#0b0f14; --sf-surface:#11161c; --sf-text:#e8edf2; --sf-muted:#a9b4bf;
-  --sf-primary:#064635; --sf-acc1:#29ABE2; --sf-acc2:#6A3DE2;
+  --sf-bg:#0b0f14; 
+  --sf-surface:#11161c; 
+  --sf-text:#0080ff; /* color principal de texto: más claro para legibilidad */
+  --sf-muted:#a9b4bf; /* texto secundario */
+  --sf-primary:#064635; 
+  --sf-acc1:#29ABE2; 
+  --sf-acc2:#6A3DE2;
   --sf-grad-acc: linear-gradient(90deg,var(--sf-acc1),var(--sf-acc2));
+  /* variables específicas para cards */
+  --card-title: #164fac;
+  --card-text:  #0095ff;
 }
-body{ background:var(--sf-bg); color:var(--sf-text); }
+body{ background:var(--sf-bg); 
+  color:var(--sf-text); }
+  
 .navbar{ background: var(--sf-surface)!important; }
+
 .sf-brand{ font-weight:700; background:var(--sf-grad-acc); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
 .card{ background:var(--sf-surface); border-color:#1f2831; }
+
 .btn-primary{ background:var(--sf-primary); border-color:var(--sf-primary); }
+
+.card .card-title {
+  color: var(--card-title, var(--sf-text));
+}
+.card .card-text {
+  color: var(--card-text, var(--sf-muted));
+}

@@ -6,7 +6,7 @@ export default function Cuenta(){
   return (
     <div className="row g-4">
       <div className="col-md-5">
-        <div className="card p-3">
+        <div className="card p-3 text-light">
           <h3 className="mb-2">Mi perfil</h3>
           <div><strong>Nombre:</strong> {ses.name || '—'}</div>
           <div><strong>Email:</strong> {ses.email}</div>
@@ -14,9 +14,9 @@ export default function Cuenta(){
         </div>
       </div>
       <div className="col-md-7">
-        <div className="card p-3">
+        <div className="card p-3 text-light">
           <h3 className="mb-2">Mis compras</h3>
-          <p className="text-muted mb-0">Aún no tienes compras registradas. (placeholder)</p>
+          <p className="card p-3 text-light">Aún no tienes compras registradas.</p>
         </div>
       </div>
     </div>
