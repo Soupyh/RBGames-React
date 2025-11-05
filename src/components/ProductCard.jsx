@@ -2,7 +2,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { getSession } from '../data/auth'
 
 export default function ProductCard({ p }) {
-  // Normalizar ruta: si viene desde "public" como "/assets/..." Vite lo sirve desde la raíz.
   const base = import.meta.env.BASE_URL || '/'
   const src =
     p.image && p.image.startsWith('/')

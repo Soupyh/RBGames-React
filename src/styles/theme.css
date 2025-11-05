@@ -1,72 +1,101 @@
+/* =========================
+   Variables de tema global
+   ========================= */
 :root{
-  --sf-bg:#0b0f14; 
-  --sf-surface:#11161c; 
-  --sf-text:#0080ff; /* color principal de texto: más claro para legibilidad */
-  --sf-muted:#a9b4bf; /* texto secundario */
-  --sf-primary:#064635; 
-  --sf-acc1:#29ABE2; 
-  --sf-acc2:#6A3DE2;
-  --sf-grad-acc: linear-gradient(90deg,var(--sf-acc1),var(--sf-acc2));
-  /* variables específicas para cards */
+  --sf-bg:#0b0f14;                /* Fondo base (tema oscuro) */
+  --sf-surface:#11161c;           /* Superficie de tarjetas/nav */
+  --sf-text:#0080ff;              /* Color principal de texto */
+  --sf-muted:#a9b4bf;             /* Texto secundario/descriptivo */
+  --sf-primary:#064635;           /* Color primario de acciones (botones) */
+  --sf-acc1:#29ABE2;              /* Acento 1 para degradé/marcas */
+  --sf-acc2:#6A3DE2;              /* Acento 2 para degradé/marcas */
+  --sf-grad-acc: linear-gradient(90deg,var(--sf-acc1),var(--sf-acc2)); /* Degradé de marca */
+  /* Variables específicas para cards (permiten personalizar títulos/textos) */
   --card-title: #164fac;
   --card-text:  #0095ff;
 }
-body{ background:var(--sf-bg); 
-  color:var(--sf-text); }
-  
-.navbar{ background: var(--sf-surface)!important; }
 
-.sf-brand{ font-weight:700; background:var(--sf-grad-acc); -webkit-background-clip:text; background-clip:text; color:transparent; }
-
-.card{ background:var(--sf-surface); border-color:#1f283100; }
-
-.btn-primary{ background:var(--sf-primary); border-color:var(--sf-primary); }
-
-.card .card-title {
-  color: var(--card-title, var(--sf-text));
-}
-.card .card-text {
-  color: var(--card-text, var(--sf-muted));
+/* Colores de la página */
+body{
+  background:var(--sf-bg);        /* Color de fondo global */
+  color:var(--sf-text);           /* Color de texto por defecto */
 }
 
+/* Fondo del navbar forzado a superficie (sobre Bootstrap) */
+.navbar{
+  background: var(--sf-surface)!important;
+}
 
-/* Card base */
+/* Marca con degradé (texto transparente + background-clip) */
+.sf-brand{
+  font-weight:700;
+  background:var(--sf-grad-acc);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+/* Base de tarjetas */
+.card{
+  background:var(--sf-surface);   /* Fondo de la tarjeta */
+  border-color:#1f283100;         /* Borde transparente (hex con alpha 00) */
+}
+
+/* Botón primario con color de la marca */
+.btn-primary{
+  background:var(--sf-primary);
+  border-color:var(--sf-primary);
+}
+
+/* Colores de tipografía dentro de la card; usan variables dedicadas con fallback */
+.card .card-title { color: var(--card-title, var(--sf-text)); }
+.card .card-text  { color: var(--card-text,  var(--sf-muted)); }
+
+/* =========================
+   Animación base de Cards
+   ========================= */
+
+/* Transiciones suaves al interactuar */
 .card {
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  will-change: transform;
+  will-change: transform; /* Sugerencia al motor de render para optimizar transform */
 }
 
-/* Hover: levanta y brilla un poco */
+/* Hover: levanta/escala y aplica sombra suave */
 .card:hover {
   transform: translateY(-6px) scale(1.01);
   box-shadow: 0 12px 30px rgba(0,0,0,.25);
   border-color: rgba(255,255,255,.15);
 }
 
+/* =========================
+   Navbar animado (auto-hide,
+   subrayado animado, blur)
+   ========================= */
 
-/* Navbar base con transiciones */
+/* Navbar base con transiciones y efecto de blur */
 .navbar-anim {
-  position: sticky;      /* se queda arriba y podemos animarla */
+  position: sticky;  /* Se mantiene fijo en la parte superior al hacer scroll */
   top: 0;
-  z-index: 1030;         /* sobre el contenido */
+  z-index: 1030;     /* Por encima del contenido */
   transition: transform .35s ease, background-color .25s ease, box-shadow .25s ease;
   will-change: transform;
-  backdrop-filter: saturate(140%) blur(6px);
-  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 92%, transparent);
+  backdrop-filter: saturate(140%) blur(6px); /* Satura + desenfoque del fondo (si lo soporta el navegador) */
+  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 92%, transparent); /* Fondo translúcido */
 }
 
-/* Sombra y fondo más sólido cuando hay scroll */
+/* Al scrollear: fondo un poco más sólido + sombra */
 .navbar-anim.nav--scrolled {
   background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 96%, transparent);
   box-shadow: 0 6px 24px rgba(0,0,0,.25);
 }
 
-/* Ocultar al hacer scroll hacia abajo */
+/* Oculta el navbar al hacer scroll hacia abajo (lo mueve fuera de la vista) */
 .navbar-anim.nav--hidden {
   transform: translateY(-100%);
 }
 
-/* Marca con degradé y brillo sutil */
+/* Marca con degradé + micro interacción al hover */
 .sf-brand {
   background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
   -webkit-background-clip: text;
@@ -78,7 +107,7 @@ body{ background:var(--sf-bg);
   .sf-brand:hover { filter: brightness(1.05); transform: translateY(-1px); }
 }
 
-/* Subrayado animado para los links */
+/* Subrayado animado en los links del navbar */
 .navbar-anim .nav-link {
   position: relative;
   transition: color .2s ease, opacity .2s ease;
@@ -91,16 +120,17 @@ body{ background:var(--sf-bg);
   background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
   transition: width .25s ease;
 }
+/* Activa el subrayado en hover y en el link activo/actual */
 .navbar-anim .nav-link:hover::after,
 .navbar-anim .nav-link.active::after,
 .navbar-anim .nav-link[aria-current="page"]::after {
   width: 100%;
 }
 
-/* Dropdown: animación “drop in” */
+/* Dropdown: pequeña animación de entrada vertical */
 @keyframes dropIn {
-  0% { opacity: 0; transform: translateY(8px) scale(.98); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0%   { opacity: 0; transform: translateY(8px) scale(.98); }
+  100% { opacity: 1; transform: translateY(0)  scale(1);   }
 }
 .navbar-anim .dropdown-menu {
   animation: dropIn .18s ease forwards;
@@ -111,7 +141,7 @@ body{ background:var(--sf-bg);
   color: var(--sf-dropdown-text, #e8edf2);
 }
 
-/* Accesibilidad y móviles */
+/* Accesibilidad: respeta preferencia de reducir movimiento */
 @media (prefers-reduced-motion: reduce) {
   .navbar-anim, .navbar-anim * {
     transition: none !important;
@@ -119,93 +149,20 @@ body{ background:var(--sf-bg);
     transform: none !important;
   }
 }
-@media (hover:none) {
-  .navbar-anim .nav-link::after { display: none; } /* evita fantasmas en táctil */
-}
 
-
-/* === Navbar animations (RB Games) === */
-.navbar-anim {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-  transition: transform .35s ease, background-color .25s ease, box-shadow .25s ease;
-  will-change: transform;
-  backdrop-filter: saturate(140%) blur(6px);
-  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 92%, transparent);
-}
-.navbar-anim.nav--scrolled {
-  background-color: color-mix(in oklab, var(--sf-navbar-bg, #11161c) 96%, transparent);
-  box-shadow: 0 6px 24px rgba(0,0,0,.25);
-}
-.navbar-anim.nav--hidden { transform: translateY(-100%); }
-
-.sf-brand {
-  background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  transition: filter .25s ease, transform .25s ease;
-}
-@media (hover:hover) {
-  .sf-brand:hover { filter: brightness(1.05); transform: translateY(-1px); }
-}
-
-.navbar-anim .nav-link {
-  position: relative;
-  transition: color .2s ease, opacity .2s ease;
-}
-.navbar-anim .nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0; bottom: -6px;
-  height: 2px; width: 0;
-  background: var(--sf-grad-acc, linear-gradient(90deg,#29ABE2,#6A3DE2));
-  transition: width .25s ease;
-}
-.navbar-anim .nav-link:hover::after,
-.navbar-anim .nav-link.active::after,
-.navbar-anim .nav-link[aria-current="page"]::after {
-  width: 100%;
-}
-
-@keyframes dropIn {
-  0% { opacity: 0; transform: translateY(8px) scale(.98); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-.navbar-anim .dropdown-menu {
-  animation: dropIn .18s ease forwards;
-  transform-origin: top center;
-  will-change: transform, opacity;
-  border-color: var(--sf-border, #1f2831);
-  background: var(--sf-dropdown-bg, #11161c);
-  color: var(--sf-dropdown-text, #e8edf2);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .navbar-anim, .navbar-anim * {
-    transition: none !important;
-    animation: none !important;
-    transform: none !important;
-  }
-}
+/* En dispositivos táctiles (sin hover), oculta el subrayado animado para evitar “fantasmas” */
 @media (hover:none) {
   .navbar-anim .nav-link::after { display: none; }
 }
 
+/* Prepara transiciones suaves para cualquier elemento .product-card */
 .product-card {
-  /* Preparamos la tarjeta para una transición suave */
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; /* Propiedad genérica para simplificar (puedes reducir a transform/box-shadow) */
 }
 
-/* Esto se activa al pasar el mouse por encima */
+/* Al pasar el mouse: escala leve + sombra + eleva sobre siblings */
 .product-card:hover {
-  /* La hacemos un 3% más grande */
-  transform: scale(1.03);
-  
-  /* Le damos una sombra más pronunciada para que "flote" */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  
-  /* Nos aseguramos de que se ponga por encima de otras tarjetas */
-  z-index: 10;
+  transform: scale(1.03);                        /* Aumenta un 3% el tamaño (enfatiza el hover) */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);    /* Sombra más notoria para efecto “flotante” */
+  z-index: 10;                                   /* Evita quedar debajo de otras tarjetas */
 }

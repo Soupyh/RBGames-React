@@ -1,7 +1,3 @@
-//
-// EN: ../data/auth.js (REEMPLAZA TODO EL ARCHIVO)
-//
-
 // ================== AUTH STORAGE KEYS ==================
 const KEY_USERS   = 'rbgames_users';
 const KEY_SESSION = 'rbgames_session';
@@ -43,8 +39,6 @@ export function getSession() { return JSON.parse(localStorage.getItem(KEY_SESSIO
 export function isAdmin() { return getSession()?.role === 'ADMIN'; }
 
 // **********************************************************
-// CORRECCIÓN DE BUG:
-// 'isUser' (para la ruta /cuenta) debe permitir a USER y ADMIN
 // ver su propia cuenta.
 // **********************************************************
 export function isUser() {
@@ -83,10 +77,8 @@ export function register({ email, pass, name, role = 'USER' }) {
 
 // ================== CRUD DE USUARIOS (ADMIN) ==================
 
-// **********************************************************
-// CORRECCIÓN DE BUG:
-// Esta función leía de 'users' en lugar de usar tu helper 'readUsers()'.
-// **********************************************************
+
+
 export function listUsers() {
   // Esta es la función que llama tu Admin.jsx.
   // Ahora usa tu helper 'readUsers' que lee 'rbgames_users'.
@@ -155,12 +147,6 @@ export function resetPassword(email, newPass) {
 // Crud para menu de edicion de perfil propio 
 //============================================
 
-// **********************************************************
-// CORRECCIÓN DE BUG:
-// Esta función leía de 'listUsers' (que estaba rota) y escribía
-// en 'users' (la clave incorrecta).
-// Ahora usa 'readUsers' y 'writeUsers'.
-// **********************************************************
 export function updateProfile(currentEmail, { name, email }) {
   try {
     if (!name || !email) {
@@ -169,7 +155,7 @@ export function updateProfile(currentEmail, { name, email }) {
 
     const e = normEmail(email);
     const ce = normEmail(currentEmail);
-    const users = readUsers(); // <-- CORREGIDO (usa tu helper)
+    const users = readUsers(); 
     const userIndex = users.findIndex(u => normEmail(u.email) === ce);
 
     if (userIndex === -1) {
@@ -184,13 +170,13 @@ export function updateProfile(currentEmail, { name, email }) {
     users[userIndex].name = name;
     users[userIndex].email = e; // Guardamos el email normalizado
 
-    writeUsers(users); // <-- CORREGIDO (usa tu helper)
+    writeUsers(users); 
 
     const session = getSession(); 
     if (session && normEmail(session.email) === ce) {
       session.name = name;
       session.email = e;
-      localStorage.setItem(KEY_SESSION, JSON.stringify(session)); // Esto está bien
+      localStorage.setItem(KEY_SESSION, JSON.stringify(session)); 
     }
 
     return { ok: true };
