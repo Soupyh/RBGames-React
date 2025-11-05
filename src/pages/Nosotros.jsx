@@ -1,6 +1,8 @@
 //
 // EN: src/pages/Nosotros.jsx (archivo nuevo)
 //
+import LogoRbGames from "../assets/IMG/LogoRbGames.png";
+
 export default function Nosotros() {
   return (
     // 'container' y 'py-4' son clases de Bootstrap que ya usas
@@ -27,9 +29,8 @@ export default function Nosotros() {
             a nuestra comunidad y adaptándonos a sus necesidades.
           </p>
 
-          {/* Puedes añadir una imagen si quieres */}
-          {/* <img src="/ruta/a/tu/imagen.jpg" className="img-fluid rounded my-3" alt="Nuestro equipo" /> */}
-         <img src="./assets/LogoRbGames.png" className="img-fluid rounded my-3" alt="Nuestro equipo" />
+          {/* Logo de la app importado desde assets */}
+          <img src={LogoRbGames} className="img-fluid rounded my-3" alt="Logo RBGames" />
         </div>
       </div>
     </div>

@@ -10,6 +10,14 @@ export default function Admin(){
   const users = useMemo(()=> listUsers(), [refresh])
   const ses = getSession()
 
+  const tickets = useMemo(() => {
+    const data = localStorage.getItem('tickets') || '[]';
+    return JSON.parse(data).reverse();
+  }, [refresh]);
+
+  // Contar tickets abiertos para la insignia
+  const ticketsAbiertos = tickets.filter(t => t.status === 'abierto').length;
+
   // ==== Productos (igual que tu versión, con pequeño refactor) ====
   function agregarProducto(e){
     e.preventDefault()
@@ -60,6 +68,17 @@ export default function Admin(){
     alert('Contraseña actualizada')
   }
 
+  function cambiarEstadoTicket(id, nuevoEstado) {
+    const todosLosTickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+    const ticketIndex = todosLosTickets.findIndex(t => t.id === id);
+    
+    if (ticketIndex > -1) {
+      todosLosTickets[ticketIndex].status = nuevoEstado;
+      localStorage.setItem('tickets', JSON.stringify(todosLosTickets));
+      setRefresh(x => x + 1); // Forzar recarga de la lista
+    }
+  }
+
   return (
     <div className="vstack gap-4">
       <header className="d-flex align-items-center gap-3">
@@ -67,10 +86,18 @@ export default function Admin(){
         <div className="btn-group">
           <button className={`btn btn-sm ${tab==='productos'?'btn-primary':'btn-outline-light'}`} onClick={()=>setTab('productos')}>Productos</button>
           <button className={`btn btn-sm ${tab==='usuarios'?'btn-primary':'btn-outline-light'}`} onClick={()=>setTab('usuarios')}>Usuarios</button>
+          <button className={`btn btn-sm ${tab==='tickets'?'btn-primary':'btn-outline-light'} position-relative`} onClick={()=>setTab('tickets')}>
+            Tickets
+            {ticketsAbiertos > 0 && (
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {ticketsAbiertos}
+              </span>
+            )}
+          </button>
         </div>
       </header>
 
-      {tab === 'productos' ? (
+      {tab === 'productos' && (
         <div className="row g-4">
           <div className="col-md-5">
             <h2 className="h4 mb-3">Nuevo producto</h2>
@@ -103,7 +130,9 @@ export default function Admin(){
             </table>
           </div>
         </div>
-      ) : (
+      )}
+
+      {tab === 'usuarios' && (
         <div className="row g-4">
           <div className="col-md-5">
             <h2 className="h4 mb-3">Nuevo usuario</h2>
@@ -155,6 +184,98 @@ export default function Admin(){
           </div>
         </div>
       )}
-    </div>
-  )
+
+      {tab === 'tickets' && (
+        <div className="row g-4">
+          <div className="col-12">
+            <h2 className="h4 mb-3">Gestión de Tickets</h2>
+            <div className="table-responsive">
+              <table className="table table-dark table-striped align-middle">
+                <thead>
+                  <tr>
+                    <th style={{width:100}}>Estado</th>
+                    <th>Fecha</th>
+                    <th>Email</th>
+                    <th>Asunto</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tickets.map(t => (
+                    <tr key={t.id}>
+                      <td>
+                        <span className={`badge ${t.status === 'abierto' ? 'bg-success' : 'bg-secondary'}`}>
+                          {t.status}
+                        </span>
+                      </td>
+                      <td>{t.fecha}</td>
+                      <td>{t.email}</td>
+                      <td>{t.asunto}</td>
+                      <td className="text-end">
+                        {/* Botón para expandir y ver descripción */}
+                        <button 
+                          className="btn btn-sm btn-outline-light me-2" 
+                          data-bs-toggle="modal" 
+                          data-bs-target={`#ticketModal-${t.id}`}
+                        >
+                          Ver
+                        </button>
+                        
+                        {t.status === 'abierto' && (
+                          <button 
+                            className="btn btn-sm btn-primary" 
+                            onClick={() => cambiarEstadoTicket(t.id, 'resuelto')}
+                          >
+                            Marcar Resuelto
+                          </button>
+                        )}
+                        {t.status === 'resuelto' && (
+                          <button 
+                            className="btn btn-sm btn-outline-light" 
+                            onClick={() => cambiarEstadoTicket(t.id, 'abierto')}
+                          >
+                            Re-abrir
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {tickets.length === 0 && (
+                    <tr><td colSpan={5} className="text-center text-muted py-4">No hay tickets</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* --- NUEVO: Modales para ver descripción de tickets --- */}
+          {tickets.map(t => (
+            <div key={`modal-${t.id}`} className="modal fade" id={`ticketModal-${t.id}`} tabIndex="-1">
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content bg-dark">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Ticket: {t.asunto}</h5>
+                    <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div className="modal-body">
+                    <p><strong>De:</strong> {t.email}</p>
+                    <p><strong>Fecha:</strong> {t.fecha}</p>
+                    <p><strong>Estado:</strong> {t.status}</p>
+                    <hr />
+                    <p><strong>Descripción:</strong></p>
+                    <p style={{whiteSpace: 'pre-wrap'}}>{t.descripcion}</p>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-outline-light" data-bs-dismiss="modal">Cerrar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+        </div>
+      )}
+
+    </div>
+  )
 }
